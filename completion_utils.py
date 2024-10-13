@@ -4,6 +4,7 @@ import pathlib
 import shlex
 import subprocess
 import sys
+from security import safe_command
 
 
 def _helper(completion_function):
@@ -82,8 +83,7 @@ def bash_complete(comp_line, comp_exe):
         prev_word = cmd_line_args[-2] if len(cmd_line_args) >= 2 else ""
 
     os.environ.update({"COMP_LINE": comp_line, "COMP_POINT": comp_point})
-    finished_process = subprocess.run(
-        [comp_exe, cmd, curr_word, prev_word],
+    finished_process = safe_command.run(subprocess.run, [comp_exe, cmd, curr_word, prev_word],
         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         universal_newlines=True,
     )
